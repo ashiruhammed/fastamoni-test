@@ -18,12 +18,12 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>(
 const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
-    backgroundColor: '#6366F1',
-    borderRadius: 24,
+    backgroundColor: '#007AFF',
+    borderRadius: 10,
     elevation: 5,
     flexDirection: 'row',
     justifyContent: 'center',
-    padding: 16,
+    padding: 8,
     shadowColor: '#000',
     shadowOffset: {
       height: 2,
