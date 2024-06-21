@@ -20,17 +20,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#007AFF',
     borderRadius: 10,
-    elevation: 5,
     flexDirection: 'row',
     justifyContent: 'center',
     padding: 8,
-    shadowColor: '#000',
-    shadowOffset: {
-      height: 2,
-      width: 0,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
   },
   buttonText: {
     color: '#FFFFFF',

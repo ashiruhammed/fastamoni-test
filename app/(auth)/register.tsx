@@ -1,29 +1,61 @@
+import { useMutation } from '@tanstack/react-query';
 import { StatusBar } from 'expo-status-bar';
 import { Formik } from 'formik';
 import { Platform, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button } from '~/components/Button';
 import * as Yup from 'yup';
-import { useRouter } from 'expo-router';
+import { Button } from '~/components/Button';
+import { registerUser } from '~/http';
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Email is required'),
   password: Yup.string().required('Password is required'),
+  username: Yup.string().required('Username is required'),
 });
 
-export default function Login() {
-  const router = useRouter();
+export default function Register() {
+  const { mutate: handleLogin } = useMutation({
+    mutationFn: registerUser,
+    onSuccess: (data) => {
+      console.log('User registered successfully', data);
+    },
+    onError: (error) => {
+      console.log('Error registering user', error);
+    },
+  });
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-      <Text style={{ fontSize: 20, fontWeight: '600' }}>Login</Text>
+      <Text style={{ fontSize: 20, fontWeight: '600' }}>Register</Text>
 
       <Formik
         validationSchema={LoginSchema}
-        initialValues={{ email: '', password: '' }}
-        onSubmit={(values) => console.log(values)}>
+        initialValues={{ email: '', password: '', username: '' }}
+        onSubmit={async (values) => {
+          handleLogin(values);
+        }}>
         {({ handleChange, handleBlur, handleSubmit, errors, touched, values }) => (
           <View style={{ marginTop: 40, gap: 24 }}>
+            <View>
+              <Text>Username</Text>
+              <TextInput
+                onChangeText={handleChange('username')}
+                onBlur={handleBlur('username')}
+                value={values.username}
+                style={styles.input}
+                placeholder="Username"
+              />
+              {errors.username && touched.username ? (
+                <Text
+                  style={{
+                    color: 'red',
+                    fontSize: 12,
+                    marginTop: 5,
+                  }}>
+                  {errors.username}
+                </Text>
+              ) : null}
+            </View>
             <View>
               <Text>Email</Text>
               <TextInput
@@ -66,16 +98,6 @@ export default function Login() {
             </View>
 
             <Button onPress={handleSubmit as any} title="Submit" />
-            <View>
-              <Button
-                onPress={() => router.push('/(auth)/register')}
-                title="Register"
-                style={{
-                  backgroundColor: '#43fa',
-                  padding: 10,
-                }}
-              />
-            </View>
           </View>
         )}
       </Formik>
