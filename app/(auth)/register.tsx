@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Formik } from 'formik';
 import { Platform, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -6,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Yup from 'yup';
 import { Button } from '~/components/Button';
 import { registerUser } from '~/http';
+import { useDispatch } from 'react-redux';
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Email is required'),
@@ -14,15 +16,20 @@ const LoginSchema = Yup.object().shape({
 });
 
 export default function Register() {
+  const dispatch = useDispatch();
   const { mutate: handleLogin } = useMutation({
     mutationFn: registerUser,
     onSuccess: (data) => {
+      router.push('/(tabs)/home');
       console.log('User registered successfully', data);
+      dispatch({ type: 'ADD_USER', payload: data });
     },
     onError: (error) => {
       console.log('Error registering user', error);
     },
   });
+  const router = useRouter();
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
